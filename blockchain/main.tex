@@ -1,0 +1,66 @@
+\documentclass[11pt]{article}
+
+\usepackage[pdftex]{graphicx}
+\usepackage[cmex10]{amsmath}
+\interdisplaylinepenalty=2500
+\usepackage{amssymb}
+\usepackage{url}
+%\usepackage{mathptmx}		% for times fonts
+\usepackage{color,xcolor,colortbl}
+\usepackage{algorithm,algorithmic}
+\usepackage[mathscr]{euscript}		% DO NOT remove this line, otherwise some symbols may get overload!
+\usepackage[letterpaper]{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+
+\usepackage{mdwmath}
+\usepackage{mdwtab}
+\usepackage[font=footnotesize]{subfig}
+
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\usepackage[unicode=true,bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,hidelinks=true,colorlinks=true,citecolor=darkblue,linkcolor=black]{hyperref}
+	
+\usepackage{epstopdf}
+\usepackage{amsthm}
+\usepackage{relsize}
+
+\newcommand{\etal}{\textit{et~al.}}
+\newcommand{\eg}{\textit{e.g.}}
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\alg}[1]{\mbox{\textsf{#1}}}
+\newcommand{\view}[1]{\textsf{{\small VIEW}}_{#1}}
+
+\setlength{\parskip}{0.25em}
+\let \labelindent \relax
+\usepackage{enumitem}
+\setlist[description]{listparindent=\parindent,leftmargin=0em,itemsep=1em}
+
+\theoremstyle{mytheoremstyle}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\floatname{algorithm}{Protocol}
+
+\begin{document}
+
+\title{Notes on Cryptocurrency and Blockchain Protocols}
+
+\author{Mahdi Zamani\\ Visa Research, Palo Alto, CA \\ \textit{mzamani@visa.com}}
+\date{}
+
+\maketitle
+
+\paragraph{The Flat Model~\cite{garaybitcoin2015}.} To model the hashing power of parties in a blockchain protocol, it is usually easier to assume all parties have the same quota of hashing power per round. The \emph{non-flat model} where parties have different hashing powers can be easily captured by clustering the flat-model parties into larger virtual entities that are comprised by more than one flat-model party. For example, mining pools in Bitcoin can be thought of such aggregations of flat-model parties.
+
+\paragraph{Common-Prefix Property~\cite{garaybitcoin2015}.} Let $n$ be the total hashing power in the network and $t$ be the total hashing power of the adversary. If $\frac{t}{n-t}$ is suitably bounded below 1, the blockchains maintained by honest nodes will have a large common prefix. More specifically, if an honest party removes $k$ blocks from the end of its local chain, then the probability that the resulting chain will not be a prefix of another honest party's chain drops exponentially in the security parameter. 
+
+\paragraph{Chain-Quality Property~\cite{garaybitcoin2015}.} For any coalition of nodes (following any mining strategy), the fraction of blocks in the blockchain discovered by these nodes is exactly proportional to their collective hashing power. It is shown that the ratio of blocks in the chain of any honest node that are contributed by malicious nodes is bounded by $\frac{t}{n-t}$.
+
+\paragraph{Chain Growth.~\cite{cryptoeprint:2016:545}} The number of blocks that are added to the blockchain during any given number of rounds.
+
+\paragraph{Selfish Mining~\cite{eyal2014}.} A pool of parties keeps its discovered blocks private to intentionally fork the chain. When the public chain approaches the pool's private branch in length, the selfish miners reveal blocks from their private chain to the public. It is shown that the honest miners waste proportionally more than selfish miners. Therefore, the selfish pool's rewards exceed its share of the network's mining power, incentivizing rational miners to join the selfish mining pool.
+
+\bibliographystyle{alpha}
+\bibliography{../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
+
+\end{document}

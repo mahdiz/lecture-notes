@@ -1,0 +1,347 @@
+\documentclass[11pt]{article}
+
+\usepackage[pdftex]{graphicx}
+\usepackage[cmex10]{amsmath}
+\interdisplaylinepenalty=2500
+\usepackage{amssymb}
+\usepackage{url}
+%\usepackage{mathptmx}		% for times fonts
+\usepackage{color,xcolor,colortbl}
+\usepackage{algorithm,algorithmic}
+\usepackage[mathscr]{euscript}		% DO NOT remove this line, otherwise some symbols may get overload!
+\usepackage[letterpaper]{geometry}
+\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+
+\usepackage{mdwmath}
+\usepackage{mdwtab}
+\usepackage[font=footnotesize]{subfig}
+
+\definecolor{darkblue}{rgb}{0.0,0.0,0.5}
+\usepackage[unicode=true,bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,hidelinks=true,colorlinks=true,citecolor=darkblue,linkcolor=black]{hyperref}
+	
+\usepackage{epstopdf}
+\usepackage{amsthm}
+\usepackage{relsize}
+
+\newcommand{\etal}{\textit{et~al.}}
+\newcommand{\eg}{\textit{e.g.}}
+\newcommand{\ie}{\textit{i.e.}}
+\newcommand{\alg}[1]{\mbox{\textsf{#1}}}
+\newcommand{\view}[1]{\textsf{{\small VIEW}}_{#1}}
+
+\setlength{\parskip}{0.25em}
+\let \labelindent \relax
+\usepackage{enumitem}
+\setlist[description]{listparindent=\parindent,leftmargin=0em,itemsep=1em}
+
+\theoremstyle{mytheoremstyle}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\newtheorem{definition}{Definition}
+\floatname{algoritheorem}{Protocol}
+
+\begin{document}
+	
+\global\long\def\E{\mathrm{\mathbf{E}}}
+
+\global\long\def\Var{\mathrm{\mathbf{Var}}}
+
+\title{Notes on Randomized Algorithms}
+
+\author{Mahdi Zamani\\ Visa Research, Palo Alto, CA \\ \textit{mzamani@visa.com}}
+\date{}
+
+\maketitle
+
+\section*{Basics}
+\begin{description}
+	\item [{Poisson~Trials.}] A sequence of \emph{independent} 0-1 random
+	variables $(X_{1},...,X_{n})$, where for every $i\in[n]$,
+	\begin{eqnarray*}
+		\Pr(X_{i}\text{ succeeds}) & = & \Pr(X_{i}=1)=p_{i}\\
+		\Pr(X_{i}\text{ fails}) & = & \Pr(X_{i}=0)=1-p_{i}
+	\end{eqnarray*}
+	\[
+	0\leq p_{i}\leq1.
+	\]
+	\item [{Bernoulli~Trials.}] A special case of Poisson trials, where the
+	independent random variables have the same distribution, i.e., for
+	every $i\in[n]$,
+	\begin{eqnarray*}
+		\Pr(X_{i}=1) & = & p\\
+		\Pr(X_{i}=0) & = & 1-p
+	\end{eqnarray*}
+	\[
+	0\leq p\leq1.
+	\]
+	\item [{Binomial~Distribution.}] The distribution of the number of successes
+	in a sequence of Bernoulli trials, e.g., the number of heads in a
+	sequence of $n$ coin flips. A binomial random variable $X$ with
+	parameters $n$ and $p$, denoted by $B(n,p)$, is defined by the
+	following probability distribution on $j=0,1,...,n$:
+	\[
+	\Pr(X=j)=\binom{n}{j}p^{j}(1-p)^{n-j}
+	\]
+	\[
+	\E[X]=np.
+	\]
+	\item [{Geometric~Distribution.}] The distribution of the number of trials
+	in a Bernoulli process until we get a success, e.g., the number of
+	times to flip a coin until it lands on heads. A geometric random variable
+	$X$ with parameter $p$ is defined by the following probability distribution:
+	\[
+	\Pr(X=n)=p(1-p)^{n-1}
+	\]
+	\[
+	\E[X]=1/p.
+	\]
+	\item [{Poisson~Distribution.}] A Poisson random variable $X$ with parameter
+	$\mu$ is defined by the following probability distribution on $j=0,1,...,n$:
+	\[
+	\Pr(X=j)=\frac{e^{-\mu}\mu^{j}}{j!}.
+	\]
+	When throwing $m$ balls into $n$ bins, the distribution of the number
+	of balls in a bin is approximately Poisson with $\mu=m/n$ which is
+	exactly the average number of balls per bin.
+	\item [{Bounds~on~Poisson~Random~Variables.}] Let $X$ be a Poisson
+	random variable with parameter $\mu$.
+	
+	\begin{enumerate}
+		\item If $x>\mu$, then 
+		\[
+		\Pr(X\geq x)\leq\frac{e^{-\mu}(e\mu)^{x}}{x^{x}}.
+		\]
+		\item If $x<\mu$, then
+		\[
+		\Pr(X\leq x)\leq\frac{e^{-\mu}(e\mu)^{x}}{x^{x}}.
+		\]
+	\end{enumerate}
+	\item [{Properties~of~Expectations.}] 
+	
+	\begin{itemize}
+		\item If $X$ is a random variable and $a$ is a constant, then $\E[aX]=a\E[X]$.
+		Thus, $\mathrm{\E}[\E[X]]=\E[X]$, because $\E[X]$ is a constant.
+		\item Linearity of expectation: For any set of random variables $X_{1},...,X_{n}$,
+		we have $\E[\sum_{i=1}^{n}X_{i}]=\sum_{i=1}^{n}\E[X_{i}]$.
+	\end{itemize}
+\end{description}
+
+\section*{Concentration Bounds}
+\begin{description}
+	\item [{Union~Bound~(Boole's~Inequality).}] The probability that at
+	least one event in a set of events happens is no greater than the
+	sum of the probabilities of the individial events, i.e., for a set
+	of events $A_{1},...,A_{n}$,
+	\[
+	\Pr\Big(\bigcup_{i=1}^{n}A_{i}\Big)\leq\sum_{i=1}^{n}\Pr(A_{i}).
+	\]
+	\item [{Markov's~Inequality.}] Let $X$ be a random variable that assumes
+	only non-negative values. Then, for all $a>0$,
+	\[
+	\Pr(X\geq a)\leq\frac{\E[X]}{a}.
+	\]
+	\item [{Variance.}] The variance of a random variable $X$ is defined as\enspace{}$\Var[X]=\E[X^{2}]-(\E[X])^{2}.$
+	
+	If $X$ is a binomial random variable, then\enspace{}$\Var[X]=np(1-p).$
+	
+	If $X$ is a geometric random variable, then\enspace{}$\Var[X]=(1-p)/p^{2}.$
+	\item [{Chebyshev's~Inequality.}] For any $a>0$,
+	\[
+	\Pr(|X-\E[X]|\geq a)\leq\frac{\mathrm{Var}[X]}{a^{2}}.
+	\]
+	\item [{Chernoff~Bounds.}] Let $X_{1},...,X_{n}$ be independent Poisson
+	trials such that $\Pr(X_{i})=p_{i}$. Let $X=\sum_{i=1}^{n}X_{i}$,
+	$\mu=\E[X]$, and $\mu_{L}\leq\mu\leq\mu_{H}$. The following Chernoff
+	bounds hold:
+	
+	\begin{center}
+		\begin{tabular}{lll}
+			For $\delta>0$, & $\Pr(X\geq(1+\delta)\mu)\leq\left(\frac{e^{\delta}}{(1+\delta)^{(1+\delta)}}\right)^{\mu}$\bigskip{}
+			& \cite[Page 64]{Michael2005}\tabularnewline
+			For $0<\delta<1$, & $\Pr(X\leq(1-\delta)\mu)\leq\left(\frac{e^{-\delta}}{(1-\delta)^{(1-\delta)}}\right)^{\mu}$\bigskip{}
+			& \cite[Page 66]{Michael2005}\tabularnewline
+			For $0<\delta<1$, & $\Pr(X\geq(1+\delta)\mu)\leq e^{-\mu\delta^{2}/3}$\bigskip{}
+			& \cite[Page 64]{Michael2005}\tabularnewline
+			For $0<\delta<1$, & $\Pr(X\leq(1-\delta)\mu)\leq e^{-\mu\delta^{2}/2}$\bigskip{}
+			& \cite[Page 66]{Michael2005}\tabularnewline
+			For $0<\delta<1$, & $\Pr(|X-\mu|\geq\delta\mu)\leq2e^{-\mu\delta^{2}/3}$\bigskip{}
+			& \cite[Page 67]{Michael2005}\tabularnewline
+			For $\delta>0$, & $\Pr(X<\mu-\delta),\,\,\Pr(X>\mu+\delta)\leq e^{-2\delta^{2}/n}$\bigskip{}
+			& \cite[Page 6]{dubhashi:2009}\tabularnewline
+			For $\delta>0$, & $\Pr(X<\mu_{L}-\delta),\,\,\Pr(X>\mu_{H}+\delta)\leq e^{-2\delta^{2}/n}$\bigskip{}
+			& \cite[Page 8]{dubhashi:2009}\tabularnewline
+			For $\delta>2e\mu$, & $\Pr(X>\delta)\leq2^{-\delta}$\bigskip{}
+			& \cite[Page 7]{dubhashi:2009}\tabularnewline
+			For $\delta>1$, & $\Pr(X\geq(1+\delta)\mu)\leq e^{-\mu\delta/3}$ & Wikipedia\tabularnewline
+		\end{tabular}
+		\par\end{center}
+	\item [{Convex~Function.}] A function $f:\mathbb{R\to\mathbb{R}}$ is
+	said to be convex if and only if, for any $x_{1},x_{2}$ and $0\leq\lambda\leq1$,
+	\[
+	f(\lambda x_{1}+(1-\lambda)x_{2})\leq\lambda f(x_{1})+(1-\lambda)f(x_{2}).
+	\]
+	\item [{Jensen's~Inequality.}] If $f$ is a convex function, then\enspace{}$\E[f(X)]\geq f(\E[X]).$
+	\item [{Conditional~Expectation.}] A conditional expectation is not a
+	scalar value; it is a random variable defined as
+	
+	\[
+	\E[X|Y]=\{\E[X|Y=y]\;\text{with}\;\Pr(Y=y)\}.
+	\]
+	In other words, $\E[X|Y]$ is a function that maps every $y\in Y$
+	to a $x\in X$. It is easy to see that
+	
+	\[
+	\E[\E[X|Y]]=\E[X].
+	\]
+	Also,
+	
+	\[
+	\E[\E[X|Y,Z]|Z]=\E[X|Z].
+	\]
+	
+\end{description}
+
+\section*{Martingales}
+
+A martingale is a sequence of random variables used to model an event
+that is a function of a sequence of past events. Martingales are useful
+for events where the knowledge of past events does not allow to predict
+the expected value or the actual probability of the event. 
+
+For example, suppose that we are throwing $m$ balls independently
+and uniformly at random into $n$ bins. Let $X_{i}$ be the random
+variable representing the bin into which the $i$-th ball falls, and
+$F$ be the number of empty bins after the $m$ balls are thrown.
+Then, the sequence 
+\[
+Z_{i}=\mathrm{E}[F|X_{0},...,X_{i}]
+\]
+is a martingale. This model allows us to find a concentration bound
+for $F$ using Azuma's inequality (which we will describe later):
+\[
+\Pr(|F-\mathrm{E}[F]|\geq\epsilon)\leq2e^{-2\epsilon^{2}/m}.
+\]
+
+\begin{definition}
+	A sequence of random variables $Z_{0},Z_{1},...$ is a \emph{martingale
+		with respect to a sequence $X_{0},X_{1}...$,} if for all $i\geq0$,
+	the following conditions hold:
+	
+	\begin{enumerate}
+		\item $Z_{i}$ is a function of $X_{0},...,X_{i}$;
+		\item $\E[|Z_{i}|]<\infty$; and
+		\item $\E[Z_{i+1}|X_{0},...,X_{i}]=Z_{i}$.
+	\end{enumerate}
+\end{definition}
+~
+\begin{definition}
+	A sequence of random variables $Z_{0},Z_{1},...$ is called a \emph{martingale}
+	when it is a martingale with respect to itself, that is
+	
+	\begin{enumerate}
+		\item $\E[|Z_{i}|]<\infty$ 
+		\item $\E[Z_{i+1}|Z_{0},...,Z_{i}]=Z_{i}$
+	\end{enumerate}
+\end{definition}
+~
+\begin{definition}
+	Let $X_{0},...,X_{n}$ be a sequence of random variables and $Y$
+	be a random variable that depends on the $X_{i}$'s. Then, for $i=0,1,...n$,
+	\[
+	Z_{i}=\E[Y|X_{0},...,X_{i}]
+	\]
+	is a martingale with respect to $X_{0},...,X_{n}$ and is called
+	a \emph{Doob martingale}.
+\end{definition}
+~
+\begin{definition}
+	A random variable $T$ is a stopping time for $\{Z_{i}\}$ if the
+	event $T=n$ depends only on $Z_{0},...,Z_{n}$.
+\end{definition}
+\begin{theorem}
+	\emph{{[}Martingale Stopping Time Theorem{]}} If $Z_{0},Z_{1},...$
+	is a martingale with respect to $X_{0},X_{1},...$ and $T$ is a stopping
+	time for $X_{1},X_{2},...$, then 
+	\[
+	\E[Z_{T}]=\E[Z_{0}],
+	\]
+	
+	if one of the following holds:
+	
+	\begin{enumerate}
+		\item $|Z_{i}|<c$ for some constant $c$.
+		\item $T$ is bounded.
+		\item $\E[T]<\infty$ and there exists a $c$ such that $E[Z_{i+1}-Z_{i}|X_{1},...,X_{i}]<c$.
+	\end{enumerate}
+\end{theorem}
+~
+\begin{theorem}
+	\emph{{[}Azuma's Inequality{]}} Let $X_{0},...,X_{n}$ be a martingale
+	such that $|X_{k}-X_{k-1}|\leq c_{k}$. Then, for all $t\geq0$ and
+	any $\lambda>0$,
+	\[
+	\Pr(|X_{t}-X_{0}|\geq\lambda)\leq2e^{-\lambda^{2}/(2\sum_{k=1}^{t}c_{k}^{2})}.
+	\]
+\end{theorem}
+~
+\begin{theorem}
+	\emph{{[}Azuma's Inequality \textendash{} Tighter Bound{]} }Let $X_{0},...,X_{n}$
+	be a martingale such that 
+	\[
+	B_{k}\leq X_{k}-X_{k-1}\leq B_{k}+d_{k}
+	\]
+	for some constants $d_{k}$ and for some random variables $B_{k}$.
+	Then, for all $t\geq0$ and any $\lambda>0$,
+	\[
+	\Pr(|X_{t}-X_{0}|\geq\lambda)\leq2e^{-2\lambda^{2}/(\sum_{k=1}^{t}d_{k}^{2})}.
+	\]
+\end{theorem}
+\begin{definition}
+	{[}Informal{]} A \emph{dependency graph} for a set of events $E_{1},...,E_{n}$
+	is graph with a vertex for each event, where there is an edge between
+	two vertices iff they have some dependency with each other. In other
+	words, if the two vertices are mutually independent, then there is
+	no edge between them.
+\end{definition}
+\begin{theorem}
+	\emph{{[}Lovasz Local Lemma{]} }Let $E_{1},...,E_{n}$ be a set of
+	events and 
+	
+	\begin{enumerate}
+		\item for all $i$, $\Pr(E_{i})\leq p$;
+		\item \textup{\emph{the degree of the dependency graph of $E_{1},...,E_{n}$
+				is at most $d$;}}
+		\item $ep(d+1)\leq1$.
+	\end{enumerate}
+	Then,
+	\[
+	\Pr\big(\bigcap_{i=1}^{n}\bar{E_{i}}\big)>0.
+	\]
+	
+\end{theorem}
+
+\section*{Useful bounds}
+
+The following bounds follow from the Taylor series expansion of $e^{x}$:
+
+\[
+1+x\leq e^{x}
+\]
+
+\[
+1-x\leq e^{-x}
+\]
+
+\[
+\text{{For\,}}x\geq0:\,\,1+x\geq e^{x}(1-x^{2})
+\]
+
+\[
+\text{{For\,}}x\geq0:\,\,1-x\geq e^{-x}-x^{2}/2
+\]
+
+\bibliographystyle{plain}
+\bibliography{../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
+
+\end{document}
