@@ -62,13 +62,27 @@ A set of $n$ distributed nodes want to agree on a single value proposed by one o
 
 \paragraph{Byzantine Faults.} A node that can deviate arbitrarily from the protocol. Byzantine nodes can vote for both a statement and its contradiction, i.e., make different statements to different nodes to put non-faulty nodes into inconsistent states. When consensus is performed in such a setting, it is often called Byzantine consensus/agreement.
 
-\paragraph{Interactive Consistency.} Each participant has an initial value, and all non-faulty participants must agree on a set of values, one for each participant.
+\paragraph{Byzantine Agreement (BA).} One of the participants, called the \emph{leader} or \emph{source}, has an initial value. A Byzantine agreement protocol satisfies the following properties:
+\begin{itemize}
+	\item \emph{Agreement}: All non-faulty processes must agree on the same value. 
+	\item \emph{Validity}: If the source is non-faulty, then the agreed upon value by all the non-faulty nodes must be the same as the initial value of the leader.
+	\item \emph{Termination}: Each non-faulty process must eventually decide on a value.
+\end{itemize}
+
+\paragraph{Interactive Consistency (IC)~\cite{pease80reaching}.} Each participant has an initial value. All non-faulty participants must agree on a vector of values, one for each participant. More formally:
+\begin{itemize}
+\item \emph{Agreement}: All honest parties must agree on the same array of values $A[v_1,...,v_n]$. 
+\item \emph{Validity}: If party $i$ is honest and its input is $v_i$, then all honest parties agree on $v_i$ for $A[i]$. If party $i$ is faulty, then honest parties can agree on any value for $A[i]$.
+\item \emph{Termination}: Each honest party must eventually decide on $A$.
+\end{itemize}
+
+\paragraph{Equivalence of Consensus Variants.} If any of the consensus variants (Byzantine agreement, consensus, and interactive consistency) has a solution, then all of them have a solution. For example, IC can be achieved from BA by run BA $n$ times, one with each participant as the leader. Also, consensus can be achieved from IC by running IC, then outputting the first element of the vector.
 
 \paragraph{Safety and Liveness Guarantees.} \emph{Safety} means that all non-faulty nodes agree on the same outcome. \emph{Liveness} means that the non-faulty nodes will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each node decide on arbitrary outcomes. Neither of these guarantees are useful by themselves.
 
 \paragraph{Consensus Termination.} A consensus protocol terminates when all non-faulty participants have terminated. If all non-faulty participants terminate in the same round, then we call they have achieved an \emph{immediate agreement}. Otherwise, we call they have achieved an \emph{eventual agreement}~\cite{fischer}.
 
-Pease~\etal~\cite{pease80reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty~\cite{pease80reaching}.
+Pease~\etal~\cite{pease80reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty.
 
 \paragraph{Authenticated Byzantine Agreement.}
 When messages exchanged between the participants are authenticated using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Dolev and Strong~\cite{Dolev:Strong:83} show that authenticated BA can be achieved in $t+1$ rounds and $O(nt)$ messages using the following algorithm:
@@ -106,9 +120,9 @@ A set of distributed nodes agree on a sequence of values~\cite{AtomicBroadcast:1
 \paragraph{State-Machine Replication.}
 A protocol that runs among a set of nodes to agree on a sequence of requests based on a deterministic state machine that implements the logic of a service to be replicated among the nodes.
 
-\paragraph{Eventual Synchrony.} Introduced by Dwork~\cite{Dwork:1988:CPP}, it models an asynchronous network that may delay messages among honest nodes arbitrarily, but eventually behaves synchronously delivering all messages within a \emph{fixed} but \emph{unknown} time bound. It is widely accepted as a realistic model for designing robust distributed systems~\cite{DBLP:journals/corr/CachinV17}.
+\paragraph{Eventual Synchrony.} Introduced by Dwork~\cite{dwork:1988:cpp}, it models an asynchronous network that may delay messages among honest nodes arbitrarily, but eventually behaves synchronously delivering all messages within a \emph{fixed} but \emph{unknown} time bound. It is widely accepted as a realistic model for designing robust distributed systems~\cite{DBLP:journals/corr/CachinV17}.
 
-\paragraph{Partial Synchrony.} Similar to eventual synchrony but with probabilistic network behavior over time~\cite{Dwork:1988:CPP}.
+\paragraph{Partial Synchrony.} Similar to eventual synchrony but with probabilistic network behavior over time~\cite{dwork:1988:cpp}.
 
 \paragraph{View-Change Protocols.} Some consensus protocols such as Paxos~\cite{Lamport:1998:Paxos}, Raft~\cite{Raft:2014}, and PBFT~\cite{Castro:1999:PBFT} proceed in \emph{epochs} (a.k.a., \emph{views}), where a \emph{leader} (a.k.a., the \emph{primary}) is responsible for the progress of the protocol. When a node (a.k.a., a \emph{replicate} or \emph{backup}) suspects that the leader is faulty, the node broadcasts a \textsc{View-Change} message to replace the leader. The new leader has to gather at least $2f+1$ signed \textsc{View-Change} messages, to broadcast a \textsc{New-View} message.
 
@@ -120,7 +134,7 @@ A protocol that runs among a set of nodes to agree on a sequence of requests bas
 
 Why is consensus among generals important? Because, halfhearted attack by a few generals would be worse than a coordinated attack or a coordinated retreat. Pease et al.~\cite{pease80reaching} prove $3f+1$ parties are necessary to achieve agreement in this problem.
 
-\bibliographystyle{plain}
-\bibliography{../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
+\bibliographystyle{alpha}
+\bibliography{../../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
 
 \end{document}

@@ -56,11 +56,17 @@
 
 \paragraph{Chain-Quality Property~\cite{garaybitcoin2015}.} For any coalition of nodes (following any mining strategy), the fraction of blocks in the blockchain discovered by these nodes is exactly proportional to their collective hashing power. It is shown that the ratio of blocks in the chain of any honest node that are contributed by malicious nodes is bounded by $\frac{t}{n-t}$.
 
-\paragraph{Chain Growth.~\cite{cryptoeprint:2016:545}} The number of blocks that are added to the blockchain during any given number of rounds.
+\paragraph{Chain Growth~\cite{cryptoeprint:2016:545}.} The number of blocks that are added to the blockchain during any given number of rounds.
 
-\paragraph{Selfish Mining~\cite{eyal2014}.} A pool of parties keeps its discovered blocks private to intentionally fork the chain. When the public chain approaches the pool's private branch in length, the selfish miners reveal blocks from their private chain to the public. It is shown that the honest miners waste proportionally more than selfish miners. Therefore, the selfish pool's rewards exceed its share of the network's mining power, incentivizing rational miners to join the selfish mining pool.
+\paragraph{Selfish Mining Attack~\cite{eyal2014}.} A pool of parties keeps its discovered blocks private to intentionally fork the chain. When the public chain approaches the pool's private branch in length, the selfish miners reveal blocks from their private chain to the public in order to waste computational resources of honest miners. It is shown that the honest miners waste proportionally more than selfish miners. Therefore, the selfish pool's rewards exceed its share of the network's mining power, incentivizing rational miners to join the selfish mining pool.
+
+\paragraph{Proof-of-Stake~(PoS)~\cite{Ouroboros:crypto:2017}.} The idea is to pick a node as the leader with a probability that is proportional to its stake in the system (i.e., the number of coins the node owns). Similar to a PoW-based consensus, the chosen leader gets to broadcast a block to the network. This process is called \emph{minting} (rather than mining as in PoW-based consensus). PoS needs a secure coin flipping protocol to select an unpredictable leader randomly with respect to the distribution of stakes.
+
+\paragraph{Bribery Attack.} The attacker builds an alternative chain secretly based on the block prior to the one containing a transaction $\mathtt{T}$. After $\mathtt{T}$ gains the necessary number of confirmations (e.g., six), and the attacker's chain becomes longer than the honest chain, the attacker publishes its chain. His chain will be accepted as the new valid blockchain, and as a result, $\mathtt{T}$ is reversed after being confirmed. Most PoS-based consensus protocols including~\cite{Ouroboros:crypto:2017,algorand16} are vulnerable to bribery attacks while such attacks are much harder in PoW-based consensus, because in the latter, bribed leaders have to solve new PoWs quickly (which is expensive) to reverse an already-confirmed transaction.
+
+\paragraph{Coin vs Token.} A coin is a unit of a digital currency that can be used like cash to transfer values and pay for goods and services. A token is a unit of shared computing resources such as bandwidth, computation, and storage. Since tokens are backed by hardware and/or Internet bandwidth, they are usually less vulnerable to speculative investment problems that most digital coins suffer from.
 
 \bibliographystyle{alpha}
-\bibliography{../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
+\bibliography{../../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
 
 \end{document}

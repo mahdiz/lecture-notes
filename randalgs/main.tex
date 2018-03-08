@@ -54,7 +54,7 @@
 
 \maketitle
 
-\section*{Basics}
+\section{Basics}
 \begin{description}
 	\item [{Poisson~Trials.}] A sequence of \emph{independent} 0-1 random
 	variables $(X_{1},...,X_{n})$, where for every $i\in[n]$,
@@ -101,11 +101,18 @@
 	\[
 	\Pr(X=j)=\frac{e^{-\mu}\mu^{j}}{j!}.
 	\]
-	When throwing $m$ balls into $n$ bins, the distribution of the number
-	of balls in a bin is approximately Poisson with $\mu=m/n$ which is
-	exactly the average number of balls per bin.
-	\item [{Bounds~on~Poisson~Random~Variables.}] Let $X$ be a Poisson
-	random variable with parameter $\mu$.
+	\begin{itemize}
+		\item The Poisson distribution expresses the probability of a given number of events occurring in a fixed interval of time or space if these events occur with a known constant rate and independently of the time since the last event.
+		
+		\item When throwing $m$ balls into $n$ bins, the distribution of the number
+		of balls in a bin is approximately Poisson with $\mu=m/n$ which is
+		exactly the average number of balls per bin.
+	\end{itemize}
+	
+	\item [Exponential Distribution.]
+	The exponential distribution is \emph{memoryless} because the past has no impact on its future behavior.
+	
+	\item [{Bounds~on~Poisson~Random~Variables.}] Let $X$ be a Poisson random variable with parameter $\mu$.
 	
 	\begin{enumerate}
 		\item If $x>\mu$, then 
@@ -127,7 +134,7 @@
 	\end{itemize}
 \end{description}
 
-\section*{Concentration Bounds}
+\section{Concentration Bounds}
 \begin{description}
 	\item [{Union~Bound~(Boole's~Inequality).}] The probability that at
 	least one event in a set of events happens is no greater than the
@@ -202,7 +209,7 @@
 	
 \end{description}
 
-\section*{Martingales}
+\section{Martingales}
 
 A martingale is a sequence of random variables used to model an event
 that is a function of a sequence of past events. Martingales are useful
@@ -321,7 +328,7 @@ for $F$ using Azuma's inequality (which we will describe later):
 	
 \end{theorem}
 
-\section*{Useful bounds}
+\section{Useful bounds}
 
 The following bounds follow from the Taylor series expansion of $e^{x}$:
 
