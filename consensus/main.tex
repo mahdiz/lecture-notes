@@ -81,8 +81,15 @@ A set of $n$ distributed nodes want to agree on a single value proposed by one o
 \paragraph{Safety and Liveness Guarantees.} \emph{Safety} means that all non-faulty nodes agree on the same outcome. \emph{Liveness} means that the non-faulty nodes will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each node decide on arbitrary outcomes. Neither of these guarantees are useful by themselves.
 
 \paragraph{Consensus Termination.} A consensus protocol terminates when all non-faulty participants have terminated. If all non-faulty participants terminate in the same round, then we call they have achieved an \emph{immediate agreement}. Otherwise, we call they have achieved an \emph{eventual agreement}~\cite{fischer}.
-
 Pease~\etal~\cite{pease80reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty.
+
+\paragraph{CAP Theorem.} It is impossible for a distributed data store to simultaneously provide more than two out of the following three properties: 
+\begin{itemize}
+	\item \textbf{Consistency:} Every read receives the most recent write or an error.
+	\item \textbf{Availability:} Every request receives a (non-error) response.
+	\item \textbf{Partition Tolerance:} The system works even if an arbitrary number of messages being dropped (or delayed).
+\end{itemize}
+In other words, in the presence of a network partition, the system can only guarantee either consistency or availability. Existing decentralized systems (such as cryptocurrencies) work by compromising between availability and consistency.
 
 \paragraph{Authenticated Byzantine Agreement.}
 When messages exchanged between the participants are authenticated using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Dolev and Strong~\cite{Dolev:Strong:83} show that authenticated BA can be achieved in $t+1$ rounds and $O(nt)$ messages using the following algorithm:
