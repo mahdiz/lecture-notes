@@ -79,13 +79,16 @@
 	in a sequence of Bernoulli trials, e.g., the number of heads in a
 	sequence of $n$ coin flips. A binomial random variable $X$ with
 	parameters $n$ and $p$, denoted by $B(n,p)$, is defined by the
-	following probability distribution on $j=0,1,...,n$:
+	following probability distribution on $x=0,1,...,n$:
 	\[
-	\Pr(X=j)=\binom{n}{j}p^{j}(1-p)^{n-j}
+	\Pr(X=x)=\binom{n}{x}p^{x}(1-p)^{n-x}
 	\]
 	\[
 	\E[X]=np.
 	\]
+	
+	\noindent The binomial distribution can also be used to approximate the probability that $x$ items are marked in a sample of size $n$ from an \emph{infinite} pool of items, where the probability of each item being marked is $p$. This is similar to sampling with replacement from the pool. If sampling is done without replacement (\ie, the sample size relative to the population size is not negligible), then the hypergeometric distribution (see below) can offer a better approximation.
+	
 	\item [{Geometric~Distribution.}] The distribution of the number of trials
 	in a Bernoulli process until we get a success, e.g., the number of
 	times to flip a coin until it lands on heads. A geometric random variable
@@ -97,9 +100,9 @@
 	\E[X]=1/p.
 	\]
 	\item [{Poisson~Distribution.}] A Poisson random variable $X$ with parameter
-	$\mu$ is defined by the following probability distribution on $j=0,1,...,n$:
+	$\mu$ is defined by the following probability distribution on $x=0,1,...,n$:
 	\[
-	\Pr(X=j)=\frac{e^{-\mu}\mu^{j}}{j!}.
+	\Pr(X=x)=\frac{e^{-\mu}\mu^{x}}{x!}.
 	\]
 	\begin{itemize}
 		\item The Poisson distribution expresses the probability of a given number of events occurring in a fixed interval of time or space if these events occur with a known constant rate and independently of the time since the last event.
@@ -124,6 +127,14 @@
 		\Pr(X\leq x)\leq\frac{e^{-\mu}(e\mu)^{x}}{x^{x}}.
 		\]
 	\end{enumerate}
+
+	\item[Hypergeometric Distribution.]
+	In binomial distribution, the probability of success, $p$, remains the same for each trial because the trials are assumed to be independent of each other. The hypergeometric distribution happens when sampling is performed from a finite population without replacement thus making trials dependent on each other. When the sample size is small relative to the population size, the random variable could still be approximated by the binomial distribution, but if the sample size is large the effect on $p$ will be large so the trials become very dependent. In such cases, the hypergeometric distribution gives a much better approximation. The hypergeometric distribution calculates the probability of having $x$ marked elements when randomly selecting a sample of size $m$ without replacement from a population of $n$ elements containing $t$ marked elements:
+	
+	\[\Pr(X=x) = \frac{\binom{t}{x}\binom{n-t}{m-x}}{\binom{n}{m}}.\]
+	
+	The expected value of $X$ is $\E[X] = \frac{mt}{n}$.
+
 	\item [{Properties~of~Expectations.}] 
 	
 	\begin{itemize}
