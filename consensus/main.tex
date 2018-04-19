@@ -92,7 +92,10 @@ Pease~\etal~\cite{pease80reaching} show that at most ${t<n/2}$ nodes can be faul
 In other words, in the presence of a network partition, the system can only guarantee either consistency or availability. Existing decentralized systems (such as cryptocurrencies) work by compromising between availability and consistency.
 
 \paragraph{Authenticated Byzantine Agreement.}
-When messages exchanged between the participants are authenticated using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Dolev and Strong~\cite{Dolev:Strong:83} show that authenticated BA can be achieved in $t+1$ rounds and $O(nt)$ messages using the following algorithm:
+When messages exchanged between the participants are signed using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Such an assumption makes synchronous Byzantine agreement solvable when $f<n/2$~\cite{srini2017}. The intuition behind this is that corrupted nodes can no longer simulate the actions of honest nodes because the use of digital signatures prevents impersonations.
+
+
+Dolev and Strong~\cite{Dolev:Strong:83} show that authenticated BA can be achieved in $t+1$ rounds and $O(nt)$ messages using the following algorithm:
 
 \begin{enumerate}
 	\item In each round, each node signs the value and sends it to only the participants who have not signed it yet.
@@ -100,7 +103,7 @@ When messages exchanged between the participants are authenticated using a digit
 \end{enumerate}
 
 \paragraph{Message and Round Impossibilities of BA.}
-For deterministic protocols, it is shown that $t+1$ rounds are needed for both unauthenticated and authenticated BA~\cite{FischerLynch81,Dolev:1982:STOC}. Also, any (deterministic) authenticated BA requires exchanging $\Omega(nt)$ messages~\cite{Dolev:Reischuk:82}.
+For deterministic protocols, it is shown that $t+1$ rounds are needed for both unauthenticated and authenticated BA~\cite{FischerLynch81,Dolev:1982:STOC}. Also, any (deterministic) authenticated BA requires exchanging $\Omega(nt)$ messages~\cite{dolev:reischuk:82}.
 
 \paragraph{FLP Impossibility~\cite{FLP}.} Deterministic consensus in the asynchronous setting is impossible even with one crash failure. This is because it is impossible to distinguish a failed process from a very slow one, so processes remain ambivalent when deciding. To avoid this impossibility and/or to achieve practicality, the protocol may be allowed to provide probabilistic safety or liveness guarantees. In the latter case, the protocol is said to provide \emph{eventual liveness} (or \emph{eventual consistency}) since nodes can decide on a value with probability one but with no time bound.
 
@@ -112,6 +115,8 @@ For deterministic protocols, it is shown that $t+1$ rounds are needed for both u
 	\caption{Smallest number of nodes for which $t$-resilient consensus protocol exists~\cite{dwork:1988:cpp}.}
 	\label{fig:bounds}
 \end{figure}
+
+\paragraph{Broadcast Channel.} If a broadcast channel is available, then the Byzantine agreement problem is trivial: each player simply broadcasts their value and then honest players decide on the majority value.
 
 \paragraph{Atomic Broadcast.}
 A set of distributed nodes agree on a sequence of values~\cite{AtomicBroadcast:1993}. Consensus and atomic broadcast are equivalent because a sequence of consensus instances provides atomic broadcast. An atomic broadcast protocol generally provides the following properties:
