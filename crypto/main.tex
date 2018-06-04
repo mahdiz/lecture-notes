@@ -596,8 +596,7 @@ This threat is usually eliminated by attaching a large string of random
 bits to X before encrypting. Such a random value that is used only
 once is called a \emph{nonce}.
 
-\subsection{Diffie-Hellman Key Exchange\protect\footnote{Also called Diffie-Hellman key agreement.}}
-
+\subsection{Diffie-Hellman Key Exchange}
 \label{sec:diffie-hellman} In 1976, Diffie and Hellman~\cite{Diffie:2006:NDC:2263321.2269104}
 proposed a method for two parties to securely agree on a public key.
 This scheme played an important role in the formation of public key
@@ -715,11 +714,11 @@ instantiated with Pedersen\textquoteright s DKG protocol.
 
 \subsection{Verifiable Random Functions}
 
-First introduced by Micali, Rabin, and Vadhan in 1999~\cite{MicaliRaVa99},
+First introduced by Micali, Rabin, and Vadhan in 1999~\cite{micali:1999:vrf},
 a VRF is a pseudorandom function (PRF), where the party holding the
 secret key can produce a non-interactive proof that the function was
 evaluated correctly. The initial construction was inefficient. Dodis
-and Yampolskiy~\cite{Dodis2005} propose an efficient VRF construction
+and Yampolskiy~\cite{dodis:yampolskiy:2005} propose an efficient VRF construction
 using bilinear maps.
 
 \subsection{Miscellaneous }
@@ -1040,10 +1039,10 @@ of success of impersonation attacks.
 
 \paragraph{\textmd{If the proof is done with no interaction between the prover
 		and the verifier, then it is called a }\textmd{\emph{non-interactive
-			zero-knowledge proof (NIZK)}}\textmd{. Goldreich and Oren \cite{Goldreich1994}
+			zero-knowledge proof (NIZK)}}\textmd{. Goldreich and Oren \cite{goldreich1994}
 		show that NIZK is impossible in the standard model meaning that some
 		assumption like a common reference string (CRS) or a random oracle
-		are needed. Using the Fiat-Shamir heuristic \cite{Fiat1987}, one
+		are needed. Using the Fiat-Shamir heuristic \cite{fiat1986prove}, one
 		can construct a NIZK protocol in the random oracle model from an interactive
 		ZK protocol. }}
 
@@ -1064,8 +1063,7 @@ the prover can compute $E(t(s)),E(h(s)),E(w(s)),E(v(s))$ from $E(s)$
 without knowing $s$. A zk-SNARK requires a trusted setup which generates
 a common reference string (CRS) for the NIZK. In this setup, the verifier
 chooses a random and secret field element $s$ and encrypts the values
-of the polynomials at that point. For a more detailed description
-of a zk-SNARK see~\cite{zk-snarks:nutshell}.
+of the polynomials at that point.
 
 \subsection{Proof of Discrete Logarithm}
 
@@ -1350,15 +1348,15 @@ results about Byzantine agreement (BA) exists in the literature:
 	\item For $t<n/2$, BA is possible with cryptographic assumptions, e.g.,
 	a public-key infrastructure (PKI) \cite{pease80reaching}.
 \end{itemize}
-With the assumption of private channels, Feldman and Micali~\cite{Feldman}
+With the assumption of private channels, Feldman and Micali~\cite{feldman}
 propose a randomized BA protocol with constant expected time. Later,
-Canetti and Rabin~\cite{canetti} achieved the optimal resiliency
+Canetti and Rabin~\cite{canetti:rabin:1993:ba} achieved the optimal resiliency
 bound of $t<n/3$ for asynchronous BA with private channels. With
-cryptographic assumptions, Cachin~et~al.~\cite{Cachin00randomoracles}
+cryptographic assumptions, Cachin~et~al.~\cite{cachin00randomoracles}
 achieve constant communication and polynomial computation complexities
 in the asynchronous model with adaptive adversary. 
 
-In the full information model, Kapron~et~al.~\cite{KKKSS} propose
+In the full information model, Kapron~et~al.~\cite{kapron:2008} propose
 a polylogarithmic BA assuming the adversary is static. Their protocol
 elects a logarithmic subset of parties less than $1/3$ of which are
 corrupted with high probability. When the adversary is adaptive, the
@@ -1407,7 +1405,7 @@ $\tilde{O}(\sqrt{n})$ bits using the protocol of King~et~al.~\cite{King:2009:BAF
 	BA problem, which was first introduced by Dwork et al. in~\cite{dwork1986fault}.
 	Instead of bringing all good processors to agreement, a large majority
 	of good processors are brought to agreement. This problem was first
-	solved efficiently by~\cite{King:2006:TSS:1170136.1170491} with
+	solved efficiently by~\cite{king:2006:p2p} with
 	poly-logarithmic message, computation, and round complexity for each
 	processor.
 	\item [{Almost-Everywhere~to~Everywhere.}] It is straightforward to go
@@ -1417,7 +1415,7 @@ $\tilde{O}(\sqrt{n})$ bits using the protocol of King~et~al.~\cite{King:2009:BAF
 	so the problem is solved for the whole set of processors.
 	\item [{Almost-Everywhere~Universal~Reduction.}] The almost-everywhere
 	protocol is based on the scalable leader election protocol proposed
-	in \cite{King:2006:SLE:1109557.1109667}. The protocol uses a layered
+	in \cite{king:2006:leader}. The protocol uses a layered
 	network. Every processor is assigned to a specific set of nodes of
 	logarithmic size on layer 0 of the network using a sampler. In order
 	to assign processors to a node $A$ on layer $l>0$, the set of processors
@@ -1638,8 +1636,8 @@ propose the first MPC protocol that is secure against a Byzantine
 adversary. This work along with~\cite{Chaum:1987:MCE:646752.704756,Galil:1987:CCS:646752.704741}
 are all based on cryptographic hardness assumptions and are often
 regarded as the first generic solutions to MPC. These were followed
-by several cryptographic improvements~\cite{Beaver:1990:RCS:100216.100287,gennaro1998simplified,Canetti:1996:ASM:888604}
-as well as information theoretically-secure protocols \cite{bgw88,chaum_crepeau_damgard:multiparty,Beaver:1991,benor_canetti_goldreich:asynchronous}
+by several cryptographic improvements~\cite{Beaver:1990:RCS:100216.100287,gennaro:1998:svf:277697.277716,Canetti:1996:ASM:888604}
+as well as information theoretically-secure protocols \cite{bgw88,chaum:88,Beaver:1991,benor_canetti_goldreich:asynchronous}
 in late 1980s and 1990s. For a complete anotated bibliography of MPC
 results see \href{http://paul.rutgers.edu/~jasperry/ssc-annbib.pdf}{this}.
 
@@ -1765,7 +1763,7 @@ secret sharing, and fully homomorphic encryption.
 	a \emph{share} of the secret. Each share reveals nothing about the
 	secret to the party possessing it, and the secret can only be reconstructed
 	when a sufficient number of shares are combined together. Many MPC
-	schemes build upon the notion of secret sharing (most notably, \cite{bgw88,chaum_crepeau_damgard:multiparty,Beaver:1991,gennaro1998simplified,damgard2008scalable,crypto-2012-24310,DKMS-ICDCN-2014}).
+	schemes build upon the notion of secret sharing (most notably, \cite{bgw88,chaum:88,Beaver:1991,gennaro:1998:svf:277697.277716,damgard2008scalable,crypto-2012-24310,DKMS-ICDCN-2014}).
 	Informally speaking, each party secret shares its input among all
 	parties using a secret sharing scheme such as Shamir's scheme~\cite{shamir:how}.
 	Then, all parties perform some intermediate computation on the received
@@ -2261,10 +2259,9 @@ take over a quorum.%
 
 \subsubsection{Sampler construction}
 
-The edges between the layers of the network shown in Figure \ref{fig:leaderElectionNetwork}
-are determined by a $(1/\log{n},1/\log{n})$-sampler $H_{l}$, where
+The edges between the layers of the network are determined by a $(1/\log{n},1/\log{n})$-sampler $H_{l}$, where
 $r=r_{l}$, $s=s_{l}$, and $d=\Theta(\log^{8}{n})$. It can be easily
-shown via the probabilistic method that such a sampler exists \cite{King:2006:SLE:1109557.1109667}.
+shown via the probabilistic method that such a sampler exists \cite{king:2006:leader}.
 However, the construction is a harder task. An exact correspondence
 between extractors and averaging samplers is given in~\cite{zuckerman-sampling}.
 
@@ -2292,7 +2289,7 @@ graph with vertices $u_{1},...,u_{n}$ corresponding to the elements
 of $[n]$ and a vertex $v$ corresponding to $H(s)$ such that there
 exists an edge between $u_{i}$ and $v$ if $i\in H(s)$.
 \begin{description}
-	\item [{Definition~\cite{King:2006:TSS:1170136.1170491}.}] Let $G(L,R)$
+	\item [{Definition~\cite{king:2006:p2p}.}] Let $G(L,R)$
 	be a bipartite graph with two disjoint sets of vertices $L$ and $R$.
 	Let $\Gamma(v)$ denote the set of all neighbors of vertex $v\in R$,
 	and let $H_{v}=\Gamma(v)$. $G$ is a \emph{$(\theta,\epsilon,N)$-election
