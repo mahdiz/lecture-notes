@@ -50,6 +50,33 @@
 
 \maketitle
 
+\paragraph{Proof-of-Work.} Introduced by Dwork and Noar \cite{dwork1993}, a proof-of-work is
+a proof showing that some moderately hard work has been done by the
+prover. Such proofs should be difficult to produce, but should be
+easily verifiable by the verifier. For example, guessing the correct
+sequence of a combination lock is a proof-of-work, because it is hard
+to find the correct combination but once produced, can be easily verified;
+just enter the combination and see if the lock opens.
+
+A proof-of-work is often requested by a server from a client to protect
+against denial-of-service attacks by clients. The common scenario
+is that the client who is requesting a service from a server is challenged
+by the server to solve a moderately hard puzzle. The client then solves
+the puzzle and sends the proof-of-work to the server. The server verifies
+the proof and if accepted, grants the service to the client.
+\begin{description}
+	\item [{Definition.}] Let $d$ be a positive number and $c,x$ be bit strings.
+	A function $f(d,c,x)\to\{0,1\}$ is called a \emph{proof-of-work function}
+	if given $d,c$, and $x$, the function can be easily computed, but
+	given $d$ and $c$, finding $x$ such that $f(d,c,x)=1$ is computationally
+	difficult but feasible. We refer to $d$ as \emph{difficulty}, to
+	$c$ as \emph{challenge}, and to $x$ as \emph{nonce.} Given $d$
+	and $c$, any $x$ such that $f(d,c,x)=1$ is called a \emph{proof-of-work}.
+\end{description}
+In bitcoin, for example, the proof-of-work function returns true if
+and only if SHA-256 cryptographic hash function returns a bit string
+starting with $d$ zeros in response to the input $x|c$.
+
 \paragraph{The Flat Model~\cite{garay2015bitcoin}.} To model the hashing power of parties in a blockchain protocol, it is usually easier to assume all parties have the same quota of hashing power per round. The \emph{non-flat model} where parties have different hashing powers can be easily captured by clustering the flat-model parties into larger virtual entities that are comprised by more than one flat-model party. For example, mining pools in Bitcoin can be thought of such aggregations of flat-model parties.
 
 \paragraph{Common-Prefix Property~\cite{garay2015bitcoin}.} Let $n$ be the total hashing power in the network and $t$ be the total hashing power of the adversary. If $\frac{t}{n-t}$ is suitably bounded below 1, the blockchains maintained by honest nodes will have a large common prefix. More specifically, if an honest party removes $k$ blocks from the end of its local chain, then the probability that the resulting chain will not be a prefix of another honest party's chain drops exponentially in the security parameter. 
@@ -75,6 +102,38 @@
 \paragraph{Uncle Block.} 
 
 \paragraph{Nothing-at-Stake Attack.} Some protocols that rely their decisions on how much stake each participant has in the system are vulnerable to a situation, where malicious participants transfer their stake into someone else's account and therefore have nothing to lose if the system's security breaks. This happens because such protocols build their security based on the idea of giving higher priorities to participants with higher stake in the system.
+
+\paragraph{Mining Pool.} When the difficulty for mining increased to the
+point where it could take a long time (like years) for individual
+miners to generate a block, bitcoin mining pools were created. With
+mining pools, miners can pool their resources together and share their
+computing power while splitting the mining reward equally according
+to the amount of shares they contributed to solving a block.
+
+\paragraph{Transaction~Processing~Limit.} As of 2016, Bitcoin's current
+block size limit is 1MB. To calculate the number of transactions per
+second (TPS) Bitcoin can process, we divide the block size limit (1MB)
+by the average size of transactions (250 bytes), divided by the average
+number of seconds between blocks (600 sec). This results in 6.6 TPS.
+In practice, bitcoin can handle 1-3 TPS as of September 2016 \cite{Blockchain:TransPerBlock}.
+
+\paragraph{Bitcoin~Incentive.} The miner who finds a block is rewarded with
+a new (i.e., never used before) bitcoin which is transferred to him
+via the first transaction of the block. The block reward creates an
+incentive for miners to support the network and to generate bitcoins.\footnote{Bitcoins are generated only from block rewards and transaction fees}\\
+As of 2016, mining for bitcoins is more profitable than transaction
+fees. As more bitcoins are mined, the reward per bitcoin will diminish
+toward zero and the miners will profit more from processing transactions.
+The block reward started at 50 bitcoins in the \emph{genesis block},
+the first block ever created in 2009. This reward is divided by half
+every 210,000 blocks which take about 4 years to be mined on average.\footnote{Since blocks are mined on average every 10 minutes, 144 blocks are
+	mined per day on average. At 144 blocks per day, 210,000 blocks take
+	on average four years to mine. In the first four years, 10,500,000
+	bitcoins were mined. Therefore, using a simple geometric series computation,
+	the total circulation will be 21,000,000 bitcoins which will happen
+	after about 95 years from 2009. } As more bitcoins are mined, the block rewards will get smaller. As
+a result, transaction fees will become the only source of profit for
+miners.
 
 \bibliographystyle{alpha}
 \bibliography{../../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
