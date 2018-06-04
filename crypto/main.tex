@@ -2297,25 +2297,6 @@ exists an edge between $u_{i}$ and $v$ if $i\in H(s)$.
 	a $(\theta,\delta)$-sampler is less than $N$.
 \end{description}
 
-\subsection{Attacks on Bitcoin}
-\begin{description}
-	\item [{51~Percent~Attack.}] Bitcoin's blockchain can only prevent double-spending
-	of money as long as a majority (i.e., equal or more than 50\%) of
-	the computational power in the network is held by honest parties.
-	\item [{Selfish~Mining.}] Eyal and Sirer~\cite{Eyal2014} show that the
-	Bitcoin protocol is not incentive-compatible meaning that rational
-	miners prefer to join a pool of \emph{selfish miners}, and the colluding
-	group will increase in size until it becomes a majority. In an attack
-	called the \emph{selfish mining}, the colluding group keeps its discovered
-	blocks private, thereby intentionally forking the chain. When the
-	public branch approaches the group's private branch in length, the
-	selfish miners reveal blocks from their private chain to the public.
-	As a result, honest miners waste computational resources on mining
-	that end up serving no purpose. While both honest and selfish parties
-	waste some resources, the honest miners waste proportionally more
-	incentivizing rational miners to join the selfish group.
-\end{description}
-
 \section{Miscellaneous}
 
 \subsection{Randomized Algorithms}
