@@ -36,7 +36,7 @@
 \let \labelindent \relax
 \usepackage{enumitem}
 \setlist[description]{listparindent=\parindent,leftmargin=0em,itemsep=0.75em}
-\setlist[itemize]{listparindent=\parindent,itemsep=0em}
+\setlist[itemize]{listparindent=\parindent,topsep=0.3em,itemsep=0em}
 
 \theoremstyle{mytheoremstyle}
 \newtheorem{theorem}{Theorem}
@@ -64,27 +64,34 @@ A set of $n$ distributed nodes want to agree on a single value proposed by one o
 	\item \textit{Termination:} All honest nodes decide on some value.
 \end{itemize}
 
-\paragraph{Byzantine Faults.} A node that can deviate arbitrarily from the protocol. Byzantine nodes can vote for both a statement and its contradiction, i.e., make different statements to different nodes to put non-faulty nodes into inconsistent states. When consensus is performed in such a setting, it is often called Byzantine consensus/agreement.
+\paragraph{Byzantine Faults.} A node that can deviate arbitrarily from the protocol. Byzantine nodes can vote for both a statement and its contradiction, i.e., make different statements to different nodes to put honest nodes into inconsistent states. When consensus is performed in such a setting, it is often called Byzantine consensus/agreement.
 
-\paragraph{Byzantine Agreement (BA).} One of the participants, called the \emph{leader} or \emph{source}, has an initial value. A Byzantine agreement protocol satisfies the following properties:
+\paragraph{Interactive Consistency (IC)~\cite{pease1980reaching}.} Each participant has an initial value. All honest participants must agree on a vector of values, one for each participant. More formally:
 \begin{itemize}
-	\item \emph{Agreement}: All non-faulty processes decide on the same value. 
-	\item \emph{Validity}: If the source is non-faulty, then the agreed upon value by all the non-faulty nodes must be the same as the initial value of the leader.
-	\item \emph{Termination}: Each non-faulty process must eventually decide on a value.
-\end{itemize}
-
-\paragraph{Interactive Consistency (IC)~\cite{pease80reaching}.} Each participant has an initial value. All non-faulty participants must agree on a vector of values, one for each participant. More formally:
-\begin{itemize}
-\item \emph{Agreement}: All honest parties must agree on the same array of values $A[v_1,...,v_n]$. 
+\item \emph{Agreement}: All honest parties output the same array of values $A[v_1,...,v_n]$. 
 \item \emph{Validity}: If party $i$ is honest and its input is $v_i$, then all honest parties agree on $v_i$ for $A[i]$. If party $i$ is faulty, then honest parties can agree on any value for $A[i]$.
 \item \emph{Termination}: Each honest party must eventually decide on $A$.
 \end{itemize}
 
+\paragraph{Byzantine Generals Problem~\cite{lsp82}.} Consider a group of parties, where one of them, called the \emph{leader} (or \emph{source}), holds an initial value. A Byzantine generals protocol satisfies the following properties:
+\begin{itemize}
+	\item \emph{Agreement}: All honest parties output the same value. 
+	\item \emph{Validity}: If the leader is honest, then all honest parties output the value proposed by the leader.
+	\item \emph{Termination}: Each honest party must eventually decide on a value.
+\end{itemize}
+
+\paragraph{Byzantine Agreement Problem~\cite{lsp82}.} Consider a group of parties each holding an initial value. A Byzantine agreement protocol satisfies the following properties:
+\begin{itemize}
+	\item \emph{Agreement}: All honest parties output the same value. 
+	\item \emph{Validity}: If all honest parties start with the same initial value $v$, then all honest parties output $v$.
+	\item \emph{Termination}: Each honest party must eventually decide on a value.
+\end{itemize}
+
 \paragraph{Equivalence of Consensus Variants.} If any of the consensus variants (Byzantine agreement, consensus, and interactive consistency) has a solution, then all of them have a solution. For example, IC can be achieved from BA by run BA $n$ times, one with each participant as the leader. Also, consensus can be achieved from IC by running IC, then outputting the first element of the vector.
 
-\paragraph{Safety and Liveness Guarantees.} \emph{Safety} means that all non-faulty nodes agree on the same outcome. \emph{Liveness} means that the non-faulty nodes will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each node decide on arbitrary outcomes. Neither of these guarantees are useful by themselves.
+\paragraph{Safety and Liveness Guarantees.} \emph{Safety} means that all honest nodes agree on the same outcome. \emph{Liveness} means that the honest nodes will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each node decide on arbitrary outcomes. Neither of these guarantees are useful by themselves.
 
-\paragraph{Consensus Termination.} A consensus protocol terminates when all non-faulty participants have terminated. If all non-faulty participants terminate in the same round, then we call they have achieved an \emph{immediate agreement}. Otherwise, we call they have achieved an \emph{eventual agreement}~\cite{fischer}.
+\paragraph{Consensus Termination.} A consensus protocol terminates when all honest participants have terminated. If all honest participants terminate in the same round, then we call they have achieved an \emph{immediate agreement}. Otherwise, we call they have achieved an \emph{eventual agreement}~\cite{fischer}.
 Pease~\etal~\cite{pease80reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty.
 
 \paragraph{CAP Theorem.} It is impossible for a distributed data store to simultaneously provide more than two out of the following three properties: 
