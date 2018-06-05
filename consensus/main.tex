@@ -68,7 +68,7 @@ A set of $n$ distributed nodes want to agree on a single value proposed by one o
 
 \paragraph{Byzantine Agreement (BA).} One of the participants, called the \emph{leader} or \emph{source}, has an initial value. A Byzantine agreement protocol satisfies the following properties:
 \begin{itemize}
-	\item \emph{Agreement}: All non-faulty processes must agree on the same value. 
+	\item \emph{Agreement}: All non-faulty processes decide on the same value. 
 	\item \emph{Validity}: If the source is non-faulty, then the agreed upon value by all the non-faulty nodes must be the same as the initial value of the leader.
 	\item \emph{Termination}: Each non-faulty process must eventually decide on a value.
 \end{itemize}
@@ -98,7 +98,7 @@ In other words, in the presence of a network partition, the system can only guar
 \paragraph{Authenticated Byzantine Agreement.}
 When messages exchanged between the participants are signed using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Such an assumption makes synchronous Byzantine agreement solvable when $f<n/2$~\cite{srini2017}. The intuition behind this is that corrupted nodes can no longer simulate the actions of honest nodes because the use of digital signatures prevents impersonations.
 
-Dolev and Strong~\cite{Dolev:Strong:83} show that authenticated BA can be achieved in $t+1$ rounds and $O(nt)$ messages using the following algorithm:
+Dolev and Strong~\cite{Dolev:Strong:83} show that $t + 1$ rounds are necessary and sufficient for \emph{deterministic} BA protocols even in the authenticated setting. They show that this can be achieved by exchanging $O(nt)$ messages using the following algorithm:
 
 \begin{enumerate}
 	\item In each round, each node signs the value and sends it to only the participants who have not signed it yet.
@@ -119,7 +119,9 @@ For deterministic protocols, it is shown that $t+1$ rounds are needed for both u
 	\label{fig:bounds}
 \end{figure}
 
-\paragraph{Broadcast Channel.} If a broadcast channel is available, then the Byzantine agreement problem is trivial: each player simply broadcasts their value and then honest players decide on the majority value.
+\paragraph{Broadcast Channel.} If a broadcast channel is available, then the Byzantine agreement problem is trivial for $t<n/2$: Each player simply broadcasts their value and then honest players decide on the majority value.
+
+\paragraph{Authenticated Broadcast.} Unlike Byzantine agreement which is only solvable in the honest majority (\ie, $t<n/2$) setting, Byzantine broadcast is solvable for any $t < n$. Dolev and Strong~\cite{Dolev:Strong:83} show that $t + 1$ rounds are necessary and sufficient for \emph{deterministic} authenticated broadcast protocols. Pease et al. [29, 24] construct an authenticated broadcast protocol for any $t < n$, and Dolev and Strong~\cite{Dolev:Strong:83} propose a polynomial-time broadcast protocol for this setting. A dishonest majority broadcast protocol can be used to achieve unanimous abort~\cite{goldwasser:2002:mpcnoba} and partial fairness~\cite{gradwohl:2006}.
 
 \paragraph{Atomic Broadcast.}
 A set of distributed nodes agree on a sequence of values~\cite{AtomicBroadcast:1993}. Consensus and atomic broadcast are equivalent because a sequence of consensus instances provides atomic broadcast. An atomic broadcast protocol generally provides the following properties:
@@ -129,8 +131,6 @@ A set of distributed nodes agree on a sequence of values~\cite{AtomicBroadcast:1
 	\item \textit{Integrity:} All honest nodes receive the same message exactly once.
 	\item \textit{Total Order:} An honest node receives $m_1$ before $m_2$ if and only if the sender sends $m_1$ before $m_2$.
 \end{itemize}
-
-\paragraph{Reliable Broadcast.}
 
 \paragraph{State-Machine Replication.}
 A protocol that runs among a set of nodes to agree on a sequence of requests based on a deterministic state machine that implements the logic of a service to be replicated among the nodes.
