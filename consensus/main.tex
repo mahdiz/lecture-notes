@@ -1,9 +1,11 @@
 \documentclass[11pt]{article}
 
+\usepackage[tt=false, type1=true]{libertine}
+\usepackage[varqu]{zi4}
+\usepackage[libertine]{newtxmath}
+\usepackage[T1]{fontenc}
+
 \usepackage[pdftex]{graphicx}
-\usepackage[cmex10]{amsmath}
-\interdisplaylinepenalty=2500
-\usepackage{amssymb}
 \usepackage{url}
 %\usepackage{mathptmx}		% for times fonts
 \usepackage{color,xcolor,colortbl}
@@ -20,6 +22,7 @@
 \usepackage[unicode=true,bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,hidelinks=true,colorlinks=true,citecolor=darkblue,linkcolor=black]{hyperref}
 	
 \usepackage{epstopdf}
+\let\openbox\relax
 \usepackage{amsthm}
 \usepackage{relsize}
 
@@ -32,7 +35,8 @@
 \setlength{\parskip}{0.25em}
 \let \labelindent \relax
 \usepackage{enumitem}
-\setlist[description]{listparindent=\parindent,leftmargin=0em,itemsep=1em}
+\setlist[description]{listparindent=\parindent,leftmargin=0em,itemsep=0.75em}
+\setlist[itemize]{listparindent=\parindent,itemsep=0em}
 
 \theoremstyle{mytheoremstyle}
 \newtheorem{theorem}{Theorem}
