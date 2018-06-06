@@ -1,9 +1,11 @@
 \documentclass[11pt]{article}
 
+\usepackage[tt=false, type1=true]{libertine}
+\usepackage[varqu]{zi4}
+\usepackage[libertine]{newtxmath}
+\usepackage[T1]{fontenc}
+
 \usepackage[pdftex]{graphicx}
-\usepackage[cmex10]{amsmath}
-\interdisplaylinepenalty=2500
-\usepackage{amssymb}
 \usepackage{url}
 %\usepackage{mathptmx}		% for times fonts
 \usepackage{color,xcolor,colortbl}
@@ -20,6 +22,7 @@
 \usepackage[unicode=true,bookmarks=true,bookmarksnumbered=false,bookmarksopen=true,hidelinks=true,colorlinks=true,citecolor=darkblue,linkcolor=black]{hyperref}
 	
 \usepackage{epstopdf}
+\let\openbox\relax
 \usepackage{amsthm}
 \usepackage{relsize}
 
@@ -80,6 +83,8 @@ starting with $d$ zeros in response to the input $x|c$.
 \paragraph{The Flat Model~\cite{garay2015bitcoin}.} To model the hashing power of parties in a blockchain protocol, it is usually easier to assume all parties have the same quota of hashing power per round. The \emph{non-flat model} where parties have different hashing powers can be easily captured by clustering the flat-model parties into larger virtual entities that are comprised by more than one flat-model party. For example, mining pools in Bitcoin can be thought of such aggregations of flat-model parties.
 
 \paragraph{Common-Prefix Property~\cite{garay2015bitcoin}.} Let $n$ be the total hashing power in the network and $t$ be the total hashing power of the adversary. If $\frac{t}{n-t}$ is suitably bounded below 1, the blockchains maintained by honest nodes will have a large common prefix. More specifically, if an honest party removes $k$ blocks from the end of its local chain, then the probability that the resulting chain will not be a prefix of another honest party's chain drops exponentially in the security parameter. 
+
+Let $\mu$ denotes the fraction of honest nodes, $\rho$ denote the fraction of adversarial power, and $p$ denote the hardness of the proof of work. Garay~\etal~\cite{garay2015bitcoin} show that if $\mu > \lambda\rho$ for some $\lambda > 1$ such that $\lambda^2 - p\lambda + 1 \geq 0$, then the blockchain maintained by the honest nodes will possess a large common prefix.
 
 \paragraph{Chain-Quality Property~\cite{garay2015bitcoin}.} For any coalition of nodes (following any mining strategy), the fraction of blocks in the blockchain discovered by these nodes is exactly proportional to their collective hashing power. It is shown that the ratio of blocks in the chain of any honest node that are contributed by malicious nodes is bounded by $\frac{t}{n-t}$.
 
