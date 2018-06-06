@@ -73,14 +73,14 @@ A set of $n$ distributed nodes want to agree on a single value proposed by one o
 \item \emph{Termination}: Each honest party must eventually decide on $A$.
 \end{itemize}
 
-\paragraph{Byzantine Generals Problem~\cite{lsp82}.} Consider a group of parties, where one of them, called the \emph{leader} (or \emph{source}), holds an initial value. A Byzantine generals protocol satisfies the following properties:
+\paragraph{Byzantine Generals Problem~\cite{lsp82}.} Consider a group of parties, where one of them, called the \emph{leader} (or \emph{source} or \emph{dealer}), holds an initial value. A Byzantine generals protocol satisfies the following properties:
 \begin{itemize}
 	\item \emph{Agreement}: All honest parties output the same value. 
 	\item \emph{Validity}: If the leader is honest, then all honest parties output the value proposed by the leader.
 	\item \emph{Termination}: Each honest party must eventually decide on a value.
 \end{itemize}
 
-\paragraph{Byzantine Agreement Problem~\cite{lsp82}.} Consider a group of parties each holding an initial value. A Byzantine agreement protocol satisfies the following properties:
+\paragraph{Byzantine Agreement Problem~\cite{lsp82}.} In the distributed computing literature, the term ``Byzantine agreement'' has been used to refer to multiple problems (\eg, compare~\cite{dffls,lindell:2002:ba}). Here we adopt the definition used more frequently as in~\cite{lindell:2002:ba,king:2016:bae:2906142.2837019}. Consider a group of parties each holding an initial value. A Byzantine agreement protocol satisfies the following properties:
 \begin{itemize}
 	\item \emph{Agreement}: All honest parties output the same value. 
 	\item \emph{Validity}: If all honest parties start with the same initial value $v$, then all honest parties output $v$.
