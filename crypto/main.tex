@@ -1,4 +1,4 @@
-\documentclass[11pt]{article}
+\documentclass[10pt]{article}
 
 \usepackage[tt=false, type1=true]{libertine}
 \usepackage[varqu]{zi4}
@@ -192,22 +192,25 @@ the most useful security proof models:
 	proof of security. In other words, it proves that given whatever information
 	and computational power an adversary desires, it is incapable of breaking
 	the scheme even in the slightest way.
+	
 	\item \textbf{Standard~model (}\textbf{\emph{a.k.a.,}}\textbf{ plain model).}
 	An algorithm is \emph{secure in the standard model} if the only assumption
 	it makes for its proof of security is the computational power of the
 	adversary (called the standard assumption).
-	\item \textbf{Random~oracle~model.} A random oracle is an abstract black-box
-	that generates truly random numbers. An algorithm is \emph{secure
-		in the random oracle model} if it assumes the existence of a random
-	oracle for its proof of security.
+	
+	\item \textbf{Random~oracle~(RO)~model.} A random oracle is an abstract black-box
+	that outputs truly random numbers mapped to an input number. Note that the oracle may still create collisions (due to the pigeonhole principle), \ie, return the same random number given a different input. However, the oracle's outputs are always unpredictable for inputs that have not been queried before (the oracle always returns the same number for a fixed input).
+	An algorithm is \emph{secure in the random oracle model} if it assumes the existence of a random oracle for its proof of security.
+	
 	\item \textbf{Common~reference~string~(CRS)~model.} An algorithm is
-	secure in the CRS model if it assumes that all parties have access
+	secure in the CRS model if it assumes that all parties (initially) have access
 	to a common random string taken from a predetermined distribution.
 	\item \textbf{Public~key~infrastructure~(PKI)~model.} An algorithm is
 	secure in the PKI model if it assumes identities of all parties can
 	be reliably verified using techniques of public-key cryptography (PKC).
 	In other words, an algorithm secure in the PKI model assumes that
 	the channels are already authenticated via PKC.
+	
 	\item \textbf{Circular~security~model.} Circular security describes the
 	way that an encryption scheme behaves when it is asked to encrypt
 	its own secret key. In theory, that behavior can be pretty unpredictable
