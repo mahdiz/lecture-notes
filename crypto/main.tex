@@ -65,6 +65,7 @@
 \author{Mahdi Zamani\\ Visa Research, Palo Alto, CA \\ \textit{mzamani@visa.com}}
 \date{}
 
+\sloppy
 \maketitle
 
 \section{Introduction}
@@ -965,7 +966,7 @@ computed a ring signature.
 	are signed by the same group member without disclosing the identity
 	of the member. This allows a verifier to check distinctness and prevent
 	the signer from signing or authenticating himself more than once and
-	thus preventing Sybil attacks~\cite{douceur02sybil} and double-voting
+	thus preventing Sybil attacks~\cite{douceur2002sybil} and double-voting
 	in e-voting systems. The algorithm of \cite{Liu2004} makes $O(n)$-long
 	signatures, where $n$ is the group size. Au et al.~\cite{Au2006}
 	propose a constant-size LRS algorithm.
@@ -1346,10 +1347,10 @@ Let $t$ be the number of corrupted parties. The following important
 results about Byzantine agreement (BA) exists in the literature:
 \begin{itemize}
 	\item For $t<n/3$, BA is possible using a deterministic protocol with round
-	complexity $O(t)$ \cite{pease80reaching} and using a probabilistic
+	complexity $O(t)$ \cite{pease1980reaching} and using a probabilistic
 	protocol with expected round complexity $O(1)$ \cite{Feldman:1988:OAB:62212.62225}.
 	\item For $t<n/2$, BA is possible with cryptographic assumptions, e.g.,
-	a public-key infrastructure (PKI) \cite{pease80reaching}.
+	a public-key infrastructure (PKI) \cite{pease1980reaching}.
 \end{itemize}
 With the assumption of private channels, Feldman and Micali~\cite{feldman}
 propose a randomized BA protocol with constant expected time. Later,
@@ -1703,7 +1704,7 @@ have this limitation.
 \begin{description}
 	\item [{MPC~and~Byzantine~Agreement.}] Byzantine agreement (BA) is a
 	special case of MPC. Thus, all lower bounds for BA immediately apply
-	to MPC. For example, BA is impossible for any $t\geq n/3$ \cite{pease80reaching},
+	to MPC. For example, BA is impossible for any $t\geq n/3$ \cite{pease1980reaching},
 	therefore general MPC is also impossible in this setting with guaranteed
 	output delivery \cite{Goldwasser:2002:MPCnoBA}. MPC protocols that
 	work with a dishonest majority such as \cite{Damgard:2010:MCD:1881412.1881451}
