@@ -92,15 +92,23 @@ A set of $n$ distributed nodes want to agree on a single value proposed by one o
 \paragraph{Safety and Liveness Guarantees.} \emph{Safety} means that all honest nodes agree on the same outcome. \emph{Liveness} means that the honest nodes will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each node decide on arbitrary outcomes. Neither of these guarantees are useful by themselves.
 
 \paragraph{Consensus Termination.} A consensus protocol terminates when all honest participants have terminated. If all honest participants terminate in the same round, then we call they have achieved an \emph{immediate agreement}. Otherwise, we call they have achieved an \emph{eventual agreement}~\cite{fischer}.
-Pease~\etal~\cite{pease80reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty.
+Pease~\etal~\cite{pease1980reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty.
 
-\paragraph{CAP Theorem.} It is impossible for a distributed data store to simultaneously provide more than two out of the following three properties: 
+\paragraph{Distributed Databases.} Large-scale web services typically rely on distributed database systems (\eg, Apache Cassandra, MongoDB, Google BigTable, Amazon DynamoDB, and Facebook TAO) that allow processing massive amounts of data that are stored on multiple storage devices across a network. Interactions with these systems are typically expected to behave in a transactional manner~\cite{gilbert2002brewer}: 
 \begin{itemize}
-	\item \textbf{Consistency:} Every read receives the most recent write or an error.
-	\item \textbf{Availability:} Every request receives a (non-error) response.
-	\item \textbf{Partition Tolerance:} The system works even if an arbitrary number of messages being dropped (or delayed).
+	\item \textit{Atomicity:} Operations commit or fail in their entirety.
+	\item \textit{Consistency:} Committed transactions are visible to all future transactions.
+	\item \textit{Isolated:} Uncommitted transactions are isolated from each other.
+	\item \textit{Durability:} When a transaction is committed, it is permanent.
 \end{itemize}
-In other words, in the presence of a network partition, the system can only guarantee either consistency or availability. Existing decentralized systems (such as cryptocurrencies) work by compromising between availability and consistency.
+
+\paragraph{CAP Theorem.} It is impossible for a distributed data store to simultaneously provide more than two out of the following three properties~\cite{gilbert2002brewer}: 
+\begin{itemize}
+	\item \textit{Consistency:} Every read receives the most recent write or an error. In other words, every update is applied to all relevant nodes at the same logical time.
+	\item \textit{Availability:} Every request receives a (non-error) response.
+	\item \textit{Partition Tolerance:} The system works even if an arbitrary number of messages sent from a subset of nodes to the rest of them is lost. A stopping failure can be modeled as a node existing in its own unique component of a partition.
+\end{itemize}
+In other words, in the presence of a network partition, the system can only guarantee either consistency or availability. Partition tolerance is typically mandatory in distributed systems, therefore database systems like Cassandra provide either AP or CP~\cite{Howareco45:online,partition:2010}.
 
 \paragraph{Authenticated Byzantine Agreement.}
 When messages exchanged between the participants are signed using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Such an assumption makes synchronous Byzantine agreement solvable when $f<n/2$~\cite{srini2017}. The intuition behind this is that corrupted nodes can no longer simulate the actions of honest nodes because the use of digital signatures prevents impersonations.
