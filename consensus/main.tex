@@ -52,47 +52,83 @@
 \author{Mahdi Zamani\\ Visa Research, Palo Alto, CA \\ \textit{mzamani@visa.com}}
 \date{}
 
+\sloppy
 \maketitle
 
-\paragraph{Consensus.}
-A set of $n$ distributed nodes want to agree on a single value proposed by one of them. In the context of blockchains, consensus often means agreement on a sequence of values similar to an atomic broadcast~\cite{DBLP:journals/corr/CachinV17}. A consensus protocol generally provides the following properties:
-
+\paragraph{Byzantine Consensus (aka, Byzantine Agreement~\cite{lsp82}).} $n$ parties, each starting with an initial value, want to reach agreement on a single value despite the malicious behavior of up to $t$ of them who can deviate arbitrarily from the protocol. The protocol must satisfy the following properties:\footnote{Byzantine agreement may refer to multiple problems in the literature (\eg, compare~\cite{dffls,lindell:2002:ba}). Here, we adopt the definition used more frequently as in~\cite{lindell:2002:ba,king:2016:bae:2906142.2837019,cryptoeprint:2018:754}.}
 \begin{itemize}
-	\item \textit{Agreement:} All honest nodes agree on the \emph{same} message.
-	\item \textit{Validity:} All honest nodes decide on the the input of some honest node.
-	\item \textit{Integrity:} Every honest node decides on at most one value which is the input of some node.
-	\item \textit{Termination:} All honest nodes decide on some value.
-\end{itemize}
-
-\paragraph{Byzantine Faults.} A node that can deviate arbitrarily from the protocol. Byzantine nodes can vote for both a statement and its contradiction, i.e., make different statements to different nodes to put honest nodes into inconsistent states. When consensus is performed in such a setting, it is often called Byzantine consensus/agreement.
-
-\paragraph{Interactive Consistency (IC)~\cite{pease1980reaching}.} Each participant has an initial value. All honest participants must agree on a vector of values, one for each participant. More formally:
-\begin{itemize}
-\item \emph{Agreement}: All honest parties output the same array of values $A[v_1,...,v_n]$. 
-\item \emph{Validity}: If party $i$ is honest and its input is $v_i$, then all honest parties agree on $v_i$ for $A[i]$. If party $i$ is faulty, then honest parties can agree on any value for $A[i]$.
-\item \emph{Termination}: Each honest party must eventually decide on $A$.
-\end{itemize}
-
-\paragraph{Byzantine Generals Problem~\cite{lsp82}.} Consider a group of parties, where one of them, called the \emph{leader} (or \emph{source} or \emph{dealer}), holds an initial value. A Byzantine generals protocol satisfies the following properties:
-\begin{itemize}
-	\item \emph{Agreement}: All honest parties output the same value. 
-	\item \emph{Validity}: If the leader is honest, then all honest parties output the value proposed by the leader.
-	\item \emph{Termination}: Each honest party must eventually decide on a value.
-\end{itemize}
-
-\paragraph{Byzantine Agreement Problem~\cite{lsp82}.} In the distributed computing literature, the term ``Byzantine agreement'' has been used to refer to multiple problems (\eg, compare~\cite{dffls,lindell:2002:ba}). Here we adopt the definition used more frequently as in~\cite{lindell:2002:ba,king:2016:bae:2906142.2837019}. Consider a group of parties each holding an initial value. A Byzantine agreement protocol satisfies the following properties:
-\begin{itemize}
-	\item \emph{Agreement}: All honest parties output the same value. 
+	\item \emph{Agreement:} All honest parties output the same value.
 	\item \emph{Validity}: If all honest parties start with the same initial value $v$, then all honest parties output $v$.
-	\item \emph{Termination}: Each honest party must eventually decide on a value.
+	\item \emph{Termination}: All honest party eventually decide on a value.
+\end{itemize}
+An stronger notion of consensus, known as \emph{strong consensus}~\cite{neiger94}, can be achieved by providing the following guarantee:
+\begin{itemize}
+	\item \emph{Strong Validity}: If the honest parties decide on $v$, then $v$ is the input of some honest party.
+\end{itemize}
+When messages can be authenticated (\eg, via digital signatures and a public-key infrastructure), then Byzantine consensus is known as \emph{authenticated} Byzantine consensus.\footnote{This requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated consensus.}
+
+\paragraph{Blockchain Consensus (aka, State-Machine Replication~\cite{schneider:1990}).} In the context of blockchain protocols, consensus typically means consensus on a sequence of values (\ie, a ledger) which was traditionally known as Byzantine fault tolerant (BFT) \emph{state-machine replication (SMR)}~\cite{schneider:1990,pbft:99} and \emph{atomic broadcast} in the literature~\cite{AtomicBroadcast:1993,DBLP:journals/corr/CachinV17}. In addition to the Byzantine consensus guarantees stated above, blockchain consensus provides the following guarantee:
+
+\begin{itemize}	
+	\item \textit{Total Order:} An honest party outputs $m_1$ before $m_2$ if and only if the sender sends $m_1$ before $m_2$.
 \end{itemize}
 
-\paragraph{Equivalence of Consensus Variants.} If any of the consensus variants (Byzantine agreement, consensus, and interactive consistency) has a solution, then all of them have a solution. For example, IC can be achieved from BA by run BA $n$ times, one with each participant as the leader. Also, consensus can be achieved from IC by running IC, then outputting the first element of the vector.
+\paragraph{Reliable Broadcast (aka, Byzantine Generals Problem~\cite{lsp82}).}
+The parties want to agree on a message sent by a \emph{distinguished} party, referred to as the \emph{leader} (aka, the \emph{general} or the \emph{dealer}), while providing the following guarantees:
+\begin{itemize}
+	\item \textit{Validity:} If the leader is honest and proposes $v$, then all honest parties output $v$.
+	\item \textit{Integrity:} Every honest party decides on at most one value which is the input of some party.
+	\item \textit{Termination:} Every honest parties eventually outputs on some value.
+\end{itemize}
+Unlike Byzantine consensus which is only solvable when ${t<n/2}$, reliable broadcast is also solvable for ${t \geq n/2}$~\cite{lsp82} in the authenticated setting.
 
-\paragraph{Safety and Liveness Guarantees.} \emph{Safety} means that all honest nodes agree on the same outcome. \emph{Liveness} means that the honest nodes will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each node decide on arbitrary outcomes. Neither of these guarantees are useful by themselves.
+\paragraph{Interactive Consistency (IC)~\cite{pease1980reaching}.} A variant of Byzantine consensus where all honest parties want to agree on a vector of their inputs, one for each participant. More formally:
+\begin{itemize}
+	\item \emph{Agreement}: All honest parties output the same array of values $A[v_1,...,v_n]$. 
+	\item \emph{Validity}: If a party $i$ is honest and its input is $v_i$, then all honest parties agree on $v_i$ for $A[i]$. If party $i$ is faulty, then honest parties can agree on any value for $A[i]$.
+	\item \emph{Termination}: Each honest party must eventually decide on $A$.
+\end{itemize}
+
+%\paragraph{Byzantine Faults.} A party that can deviate arbitrarily from the protocol. Byzantine parties can vote for both a statement and its contradiction, i.e., make different statements to different parties to put honest parties into inconsistent states. When consensus is performed in such a setting, it is often called Byzantine consensus/agreement.
+
+\paragraph{Equivalence of Consensus Variants.} If any of the consensus variants (Byzantine consensus, blockchain consensus, and interactive consistency) has a solution, then all of them have a solution. For example, IC can be achieved from Byzantine consensus by running it $n$ times, one with each participant as the leader. Also, consensus can be achieved from IC by running IC, then outputting the first element of the vector. 
+If a broadcast primitive is available, then Byzantine consensus becomes trivial for ${t<n/2}$: Each party simply broadcasts its input, and then honest parties decide on the majority value.
+
+\paragraph{Solvability of Consensus and Broadcast.} The well-known results are as follow:
+\begin{enumerate}
+	\item Byzantine consensus is impossible to achieve when $t \geq n/3$ in the unauthenticated setting~\cite{lsp82} and when $t \geq n/2$ in any setting~\cite{fitzi2003}. Authenticated consensus is solvable when $t<n/2$~\cite{lsp82}.
+	
+	\item \emph{FLP Impossibility~\cite{FLP}:} Deterministic consensus in the asynchronous setting is impossible even with one crash failure. This is because it is impossible to distinguish a failed process from a very slow one, so processes remain ambivalent when deciding. To avoid this impossibility and/or to achieve practicality, the protocol may be allowed to provide probabilistic safety or liveness guarantees. In the latter case, the protocol is said to provide \emph{eventual liveness} (or \emph{eventual consistency}) since parties can decide on a value with probability one but with no time bound.
+	
+	\item \emph{Bracha-Toueg Impossibility~\cite{Bracha:Toueg:1983}:} There is no (probabilistic) asynchronous consensus protocol resilient to $t \geq n/3$ malicious parties.
+	
+	\item \emph{Dolev-Strong Impossibility~\cite{dolev:strong:83}:} $t + 1$ rounds are necessary and sufficient for \emph{deterministic} authenticated broadcast.
+	
+	\item \emph{Dolev-Reischuk Impossibility~\cite{dolev:reischuk:82}:} Any (deterministic) authenticated BA requires exchanging $\Omega(nt)$ messages.
+\end{enumerate}
+
+\paragraph{Safety and Liveness Guarantees.} In the context of state-machine replication, \emph{safety} (aka, \emph{consistency}) means that all honest parties agree on the same outcome. \emph{Liveness} means that the honest parties will make progress during the course of the protocol. Safety can be trivially achieved by making no forward progress at all from an initial state. Liveness can be trivially achieved by making progress unsafely by just letting each party decide on arbitrary outcomes. Neither of these guarantees are useful by themselves. Typically, the agreement property of a consensus protocol provides safety, while the validity and termination guarantees together provide liveness~\cite{cryptoeprint:2018:754}.
 
 \paragraph{Consensus Termination.} A consensus protocol terminates when all honest participants have terminated. If all honest participants terminate in the same round, then we call they have achieved an \emph{immediate agreement}. Otherwise, we call they have achieved an \emph{eventual agreement}~\cite{fischer}.
-Pease~\etal~\cite{pease1980reaching} show that at most ${t<n/2}$ nodes can be faulty for the Byzantine agreement to be solvable. Also, they show that if messages are not authenticated using a digital signature scheme, then at most ${t<n/3}$ nodes can be faulty.
+
+\paragraph{Dolev-Strong Byzantine Agreement~\cite{dolev:strong:83}.}
+They show that this can be achieved by exchanging $O(nt)$ messages using the following algorithm:
+\begin{enumerate}
+	\item In each round, each party signs the value and sends it to only the participants who have not signed it yet.
+	\item After $t$ rounds, each message has $t$ signatures on it. Hence, each correct value has been seen by all the correct participants after $t+1$ rounds.
+\end{enumerate}
+
+\paragraph{Dolev-Strong Reliable Broadcast~\cite{dolev:strong:83}.} 
+Lamport~\etal~\cite{lsp82} propose an exponential computation and communication protocol for reliable broadcast in the information-theoretic setting. Dolev and Strong~\cite{dolev:strong:83} propose a polynomial-time broadcast protocol using signatures as follows~\cite{cryptoeprint:2018:754}: In the first round, the sender digitally signs and sends its message to all the other parties, while in subsequent rounds parties append their signatures and forward the result. If any party ever observes valid signatures of the sender on two different messages, then that party forwards both signatures to all other parties and disqualifies the sender (and all parties output some default message).
+
+\paragraph{View-Change Protocols.} Some consensus protocols such as Paxos~\cite{lamport:1998:Paxos}, Raft~\cite{raft:2014}, and PBFT~\cite{pbft:99} proceed in \emph{epochs} (a.k.a., \emph{views}), where a \emph{leader} (a.k.a., the \emph{primary}) is responsible for the progress of the protocol. When a party (a.k.a., a \emph{replicate} or \emph{backup}) suspects that the leader is faulty, the party broadcasts a \textsc{View-Change} message to replace the leader. The new leader has to gather at least $2f+1$ signed \textsc{View-Change} messages, to broadcast a \textsc{New-View} message. A Byzantine leader cannot violate safety (\ie, cause inconsistencies) but can violate liveness (\ie, prevent progress) by not proposing. In PBFT~\cite{pbft:99}, every honest participant monitors the current leader, and if a new message is not proposed after some time, the honest participant requests a new leader.
+
+%\paragraph{Byzantine Generals Problem.} A commanding general orders its lieutenant generals to attack or to surrender. Some of the generals are traitors. The goal is:
+%\begin{itemize}
+%	\item All loyal lieutenants obey the same order, or
+%	\item If the commanding general is loyal, then every loyal lieutenant obeys the order he sends.
+%\end{itemize}
+%Why is consensus among generals important? Because, halfhearted attack by a few generals would be worse than a coordinated attack or a coordinated retreat. 
 
 \paragraph{Distributed Databases.} Large-scale web services typically rely on distributed database systems (\eg, Apache Cassandra, MongoDB, Google BigTable, Amazon DynamoDB, and Facebook TAO) that allow processing massive amounts of data that are stored on multiple storage devices across a network. Interactions with these systems are typically expected to behave in a transactional manner~\cite{gilbert2002brewer}: 
 \begin{itemize}
@@ -104,65 +140,25 @@ Pease~\etal~\cite{pease1980reaching} show that at most ${t<n/2}$ nodes can be fa
 
 \paragraph{CAP Theorem.} It is impossible for a distributed data store to simultaneously provide more than two out of the following three properties~\cite{gilbert2002brewer}: 
 \begin{itemize}
-	\item \textit{Consistency:} Every read receives the most recent write or an error. In other words, every update is applied to all relevant nodes at the same logical time.
+	\item \textit{Consistency:} Every read receives the most recent write or an error. In other words, every update is applied to all relevant parties at the same logical time.
 	\item \textit{Availability:} Every request receives a (non-error) response.
-	\item \textit{Partition Tolerance:} The system works even if an arbitrary number of messages sent from a subset of nodes to the rest of them is lost. A stopping failure can be modeled as a node existing in its own unique component of a partition.
+	\item \textit{Partition Tolerance:} The system works even if an arbitrary number of messages sent from a subset of parties to the rest of them is lost. A stopping failure can be modeled as a party existing in its own unique component of a partition.
 \end{itemize}
 In other words, in the presence of a network partition, the system can only guarantee either consistency or availability. Partition tolerance is typically mandatory in distributed systems, therefore database systems like Cassandra provide either AP or CP~\cite{Howareco45:online,partition:2010}.
 
-\paragraph{Authenticated Byzantine Agreement.}
-When messages exchanged between the participants are signed using a digital signature scheme, the protocol is called authenticated Byzantine agreement. This assumption requires that the author of a signed message be determined by anyone holding the message, regardless of where it came from (this is often called the \emph{non-repudiation} property). Therefore, message authentication codes (MACs) cannot be solely used to provide authenticated BA. Such an assumption makes synchronous Byzantine agreement solvable when $f<n/2$~\cite{srini2017}. The intuition behind this is that corrupted nodes can no longer simulate the actions of honest nodes because the use of digital signatures prevents impersonations.
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.9\linewidth]{bounds}
+%	\caption{Smallest number of parties for which $t$-resilient consensus protocol exists~\cite{dwork:1988:cpp}.}
+%	\label{fig:bounds}
+%\end{figure}
 
-Dolev and Strong~\cite{Dolev:Strong:83} show that $t + 1$ rounds are necessary and sufficient for \emph{deterministic} BA protocols even in the authenticated setting. They show that this can be achieved by exchanging $O(nt)$ messages using the following algorithm:
+%\paragraph{State-Machine Replication.}
+%A protocol that runs among a set of parties to agree on a sequence of requests based on a deterministic state machine that implements the logic of a service to be replicated among the parties.
 
-\begin{enumerate}
-	\item In each round, each node signs the value and sends it to only the participants who have not signed it yet.
-	\item After $t$ rounds, each message has $t$ signatures on it. Hence, each correct value has been seen by all the correct participants after $t+1$ rounds.
-\end{enumerate}
+\paragraph{Eventual Synchrony.} Introduced by Dwork~\cite{dwork:1988:cpp}, it models an asynchronous network that may delay messages among honest parties arbitrarily, but eventually behaves synchronously delivering all messages within a \emph{fixed} but \emph{unknown} time bound. It is widely accepted as a realistic model for designing robust distributed systems~\cite{DBLP:journals/corr/CachinV17}.
 
-\paragraph{Message and Round Impossibilities of BA.}
-For deterministic protocols, it is shown that $t+1$ rounds are needed for both unauthenticated and authenticated BA~\cite{FischerLynch81,Dolev:1982:STOC}. Also, any (deterministic) authenticated BA requires exchanging $\Omega(nt)$ messages~\cite{dolev:reischuk:82}.
-
-\paragraph{FLP Impossibility~\cite{FLP}.} Deterministic consensus in the asynchronous setting is impossible even with one crash failure. This is because it is impossible to distinguish a failed process from a very slow one, so processes remain ambivalent when deciding. To avoid this impossibility and/or to achieve practicality, the protocol may be allowed to provide probabilistic safety or liveness guarantees. In the latter case, the protocol is said to provide \emph{eventual liveness} (or \emph{eventual consistency}) since nodes can decide on a value with probability one but with no time bound.
-
-\paragraph{Bracha-Toueg Impossibility~\cite{Bracha:Toueg:1983}.} There is no (probabilistic) asynchronous consensus protocol resilient to $t \geq n/3$ malicious nodes. See Figure~\ref{fig:bounds}.
-
-\begin{figure}
-	\centering
-	\includegraphics[width=0.9\linewidth]{bounds}
-	\caption{Smallest number of nodes for which $t$-resilient consensus protocol exists~\cite{dwork:1988:cpp}.}
-	\label{fig:bounds}
-\end{figure}
-
-\paragraph{Broadcast Channel.} If a broadcast channel is available, then the Byzantine agreement problem is trivial for $t<n/2$: Each player simply broadcasts their value and then honest players decide on the majority value.
-
-\paragraph{Authenticated Broadcast.} Unlike Byzantine agreement which is only solvable in the honest majority (\ie, $t<n/2$) setting, Byzantine broadcast is solvable for any $t < n$. Dolev and Strong~\cite{Dolev:Strong:83} show that $t + 1$ rounds are necessary and sufficient for \emph{deterministic} authenticated broadcast protocols. Pease et al. [29, 24] construct an authenticated broadcast protocol for any $t < n$, and Dolev and Strong~\cite{Dolev:Strong:83} propose a polynomial-time broadcast protocol for this setting. A dishonest majority broadcast protocol can be used to achieve unanimous abort~\cite{goldwasser:2002:mpcnoba} and partial fairness~\cite{gradwohl:2006}.
-
-\paragraph{Atomic Broadcast.}
-A set of distributed nodes agree on a sequence of values~\cite{AtomicBroadcast:1993}. Consensus and atomic broadcast are equivalent because a sequence of consensus instances provides atomic broadcast. An atomic broadcast protocol generally provides the following properties:
-\begin{itemize}
-	\item \textit{Agreement:} All honest nodes eventually receive the \emph{same} message.
-	\item \textit{Validity:} If an honest node broadcasts a message, then all honest nodes eventually receive it.
-	\item \textit{Integrity:} All honest nodes receive the same message exactly once.
-	\item \textit{Total Order:} An honest node receives $m_1$ before $m_2$ if and only if the sender sends $m_1$ before $m_2$.
-\end{itemize}
-
-\paragraph{State-Machine Replication.}
-A protocol that runs among a set of nodes to agree on a sequence of requests based on a deterministic state machine that implements the logic of a service to be replicated among the nodes.
-
-\paragraph{Eventual Synchrony.} Introduced by Dwork~\cite{dwork:1988:cpp}, it models an asynchronous network that may delay messages among honest nodes arbitrarily, but eventually behaves synchronously delivering all messages within a \emph{fixed} but \emph{unknown} time bound. It is widely accepted as a realistic model for designing robust distributed systems~\cite{DBLP:journals/corr/CachinV17}.
-
-\paragraph{Partial Synchrony.} Similar to eventual synchrony but with probabilistic network behavior over time~\cite{dwork:1988:cpp}.
-
-\paragraph{View-Change Protocols.} Some consensus protocols such as Paxos~\cite{lamport:1998:Paxos}, Raft~\cite{raft:2014}, and PBFT~\cite{pbft:99} proceed in \emph{epochs} (a.k.a., \emph{views}), where a \emph{leader} (a.k.a., the \emph{primary}) is responsible for the progress of the protocol. When a node (a.k.a., a \emph{replicate} or \emph{backup}) suspects that the leader is faulty, the node broadcasts a \textsc{View-Change} message to replace the leader. The new leader has to gather at least $2f+1$ signed \textsc{View-Change} messages, to broadcast a \textsc{New-View} message. A Byzantine leader cannot violate safety (\ie, cause inconsistencies) but can violate liveness (\ie, prevent progress) by not proposing. In PBFT~\cite{pbft:99}, every honest participant monitors the current leader, and if a new message is not proposed after some time, the honest participant requests a new leader.
-
-\paragraph{Byzantine Generals Problem.} A commanding general orders its lieutenant generals to attack or to surrender. Some of the generals are traitors. The goal is:
-\begin{itemize}
-	\item All loyal lieutenants obey the same order, or
-	\item If the commanding general is loyal, then every loyal lieutenant obeys the order he sends.
-\end{itemize}
-
-Why is consensus among generals important? Because, halfhearted attack by a few generals would be worse than a coordinated attack or a coordinated retreat. Pease et al.~\cite{pease80reaching} prove $3f+1$ parties are necessary to achieve agreement in this problem.
+%\paragraph{Partial Synchrony.} Similar to eventual synchrony but with probabilistic network behavior over time~\cite{dwork:1988:cpp}.
 
 \bibliographystyle{alpha}
 \bibliography{../../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
