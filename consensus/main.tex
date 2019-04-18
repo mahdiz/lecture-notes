@@ -47,9 +47,9 @@
 
 \begin{document}
 
-\title{Notes on Consensus Protocols}
+\title{Notes on Byzantine Consensus and Reliable Broadcast}
 
-\author{Mahdi Zamani\\ Visa Research, Palo Alto, CA \\ \textit{mzamani@visa.com}}
+\author{Mahdi Zamani \\ \textit{mzamani@visa.com}}
 \date{}
 
 \sloppy
@@ -130,37 +130,9 @@ Lamport~\etal~\cite{lsp82} propose an exponential computation and communication 
 %\end{itemize}
 %Why is consensus among generals important? Because, halfhearted attack by a few generals would be worse than a coordinated attack or a coordinated retreat. 
 
-\paragraph{Distributed Databases.} Large-scale web services typically rely on distributed database systems (\eg, Apache Cassandra, MongoDB, Google BigTable, Amazon DynamoDB, and Facebook TAO) that allow processing massive amounts of data that are stored on multiple storage devices across a network. Interactions with these systems are typically expected to behave in a transactional manner~\cite{gilbert2002brewer}: 
-\begin{itemize}
-	\item \textit{Atomicity:} Operations commit or fail in their entirety.
-	\item \textit{Consistency:} Committed transactions are visible to all future transactions.
-	\item \textit{Isolated:} Uncommitted transactions are isolated from each other.
-	\item \textit{Durability:} When a transaction is committed, it is permanent.
-\end{itemize}
-
-\paragraph{CAP Theorem.} It is impossible for a distributed data store to simultaneously provide more than two out of the following three properties~\cite{gilbert2002brewer}: 
-\begin{itemize}
-	\item \textit{Consistency:} Every read receives the most recent write or an error. In other words, every update is applied to all relevant parties at the same logical time.
-	\item \textit{Availability:} Every request receives a (non-error) response.
-	\item \textit{Partition Tolerance:} The system works even if an arbitrary number of messages sent from a subset of parties to the rest of them is lost. A stopping failure can be modeled as a party existing in its own unique component of a partition.
-\end{itemize}
-In other words, in the presence of a network partition, the system can only guarantee either consistency or availability. Partition tolerance is typically mandatory in distributed systems, therefore database systems like Cassandra provide either AP or CP~\cite{Howareco45:online,partition:2010}.
-
-%\begin{figure}
-%	\centering
-%	\includegraphics[width=0.9\linewidth]{bounds}
-%	\caption{Smallest number of parties for which $t$-resilient consensus protocol exists~\cite{dwork:1988:cpp}.}
-%	\label{fig:bounds}
-%\end{figure}
-
-%\paragraph{State-Machine Replication.}
-%A protocol that runs among a set of parties to agree on a sequence of requests based on a deterministic state machine that implements the logic of a service to be replicated among the parties.
-
-\paragraph{Eventual Synchrony.} Introduced by Dwork~\cite{dwork:1988:cpp}, it models an asynchronous network that may delay messages among honest parties arbitrarily, but eventually behaves synchronously delivering all messages within a \emph{fixed} but \emph{unknown} time bound. It is widely accepted as a realistic model for designing robust distributed systems~\cite{DBLP:journals/corr/CachinV17}.
-
 %\paragraph{Partial Synchrony.} Similar to eventual synchrony but with probabilistic network behavior over time~\cite{dwork:1988:cpp}.
 
 \bibliographystyle{alpha}
-\bibliography{../../secbib/secbib}			% pull from https://github.com/mahdiz/secbib
+\bibliography{secbib}			% pull from https://github.com/mahdiz/secbib
 
 \end{document}
